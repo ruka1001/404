@@ -98,7 +98,7 @@ function render(){
  }else if(current==="board"){
  html=boardPage();
  }else if(current==="archive"){
- const n=clueStatus();html=shell("LEGACY BUILDING INDEX / SEARCH","旧版建筑档案检索","档案入口仅在四份人物材料完成核验后开放。当前已核验："+n+"/4。",'<div class="panel"><h2>检索条件</h2><p>请结合四份材料确认：建筑方位、楼层、空间原始用途，以及最后一次异常记录时间。</p><div class="answerbox"><input id="archiveCode" placeholder="输入完整档案编号"><button id="submitArchive">查询档案</button></div><div class="feedback" id="archiveFeedback"></div></div>');
+  const n=clueStatus();html=shell("LEGACY BUILDING INDEX / SEARCH","旧版建筑档案检索","档案入口需要四份人物材料与M身份核验全部完成。人物线索："+n+"/4；M身份："+(mSolved?"已核验":"未核验")+"。",'<div class="panel"><h2>检索条件</h2><p>请结合四份材料确认：建筑方位、楼层、空间原始用途与目录尾号，以及最后一次异常记录时间。</p><div class="answerbox"><input id="archiveCode" placeholder="输入完整档案编号"><button id="submitArchive">查询档案</button></div><div class="feedback" id="archiveFeedback"></div></div>');
  }else if(current==="record"){
  html=shell("LEGACY BUILDING INDEX / RECORD","LIB-4-04","旧版建筑档案系统 · 已注销记录",'<div class="panel"><table class="archive-table"><tr><td>档案编号</td><td><b>LIB-4-04</b></td></tr><tr><td>所在位置</td><td>图书馆西侧四层</td></tr><tr><td>原始用途</td><td>未登记</td></tr><tr><td>最后使用日期</td><td>2009-11-15</td></tr><tr><td>最后记录时间</td><td>03:04</td></tr><tr><td>注销原因</td><td>记录缺失</td></tr><tr><td>钥匙归还</td><td>无记录</td></tr></table><p class="muted">备注：该空间不在公开建筑平面图中。编号04为档案序号，不代表从楼梯口数出的第四扇门。</p><button class="secondary" data-go="mtruth">查看M的草稿邮件</button></div>');
  }else if(current==="mtruth"){
@@ -114,7 +114,7 @@ function render(){
  }
  $("#content").innerHTML=html;
  $("#content [data-go]").forEach(b=>b.addEventListener("click",()=>{const target=b.dataset.go;if(target==="access"&&clueStatus()<2){const box=document.createElement("div");box.className="notice";box.textContent="这份异常访问记录尚未开放。请先完成至少两个人物的材料核验。";b.after(box);return;}if(target==="objects"&&current!=="access"){return;}if(target==="last"&&current!=="objects"){return;}go(target);}));
- if(current==="archive")$("#submitArchive").onclick=()=>{const v=$("#archiveCode").value.trim().toUpperCase();if(v==="LIB-4-04"&&clueStatus()===4&&mSolved){go("record");}else $("#archiveFeedback").innerHTML='<span class="error">'+(!mSolved?"还需要完成M身份核验。":clueStatus()!==4?"四份人物材料尚未全部核验。":"编号不正确。请重新核对四条线索，不能只凭猜测。")'</span>';};
+  if(current==="archive")$("#submitArchive").onclick=()=>{const v=$("#archiveCode").value.trim().toUpperCase();if(v==="LIB-4-04"&&clueStatus()===4&&mSolved){go("record");}else{const reason=!mSolved?"还需要完成M身份核验。":clueStatus()!==4?"四份人物材料尚未全部核验。":"编号不正确。请重新核对四条线索，不能只凭猜测。";$("#archiveFeedback").innerHTML='<span class="error">'+reason+'</span>';}};
  if(current==="ending")$("#finishGame").onclick=()=>{const v=$("#lastWords").value.trim();if(!v){$("#finishResult").innerHTML='<span class="error">请先写下一句话。</span>';return;}localStorage.setItem("404_final_message",v);$("#finishResult").innerHTML='<div class="clue"><b>归档完成 · M-2009-1115</b><p>归档人：M</p><p>欢迎回来。</p><p class="quote">这次，轮到你了。</p><p class="muted">若重新打开照片，右侧人影仍然存在。</p></div>';};
  if(current==="xu"||current==="su"||current==="lin"||current==="zhou")bindCase(current); if(current==="mthread")bindMthread();
 }
